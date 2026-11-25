@@ -166,7 +166,10 @@ button{cursor:pointer}
 .sheet .btn-row{margin-top:16px}
 .banner.info{background:var(--primary-soft);border-color:#cdd8ff;color:var(--primary)}
 .banner.info button{background:var(--primary)}.banner.info .ghost{background:transparent;color:var(--primary)}
+.syncchip{display:none;margin-top:14px;width:100%;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--primary-soft);color:var(--primary);font-size:12px;font-weight:700;text-align:left}
+.syncchip.show{display:block}
 .ad-slot{display:none}
+.ad-slot.pre{display:block;height:0;min-height:0;margin:0;overflow:hidden}
 .ad-slot.on{display:block;margin:20px 0 6px;min-height:60px;text-align:center;border-radius:14px;overflow:hidden}
 @media(max-width:600px){
  .topbar{padding:14px 13px 16px}.brand h1{font-size:15px}.brand-mark{width:38px;height:38px}
@@ -176,7 +179,7 @@ button{cursor:pointer}
 }
 @media(max-width:370px){.stats{grid-template-columns:repeat(3,1fr)}.day{grid-template-columns:38px minmax(0,1fr) 56px}.status-area{gap:4px}.sbtn{min-width:31px}}
 @media print{
- body{background:#fff;padding:0}.topbar{background:#fff;color:#111;padding:10px 0}.brand p{color:#555}.brand-mark,.menu-btn,.drawer,.drawer-overlay,.cycle-nav button,.money-card input,.banner,.lock,.ad-slot,.sheet,.sheet-ov{display:none!important}
+ body{background:#fff;padding:0}.topbar{background:#fff;color:#111;padding:10px 0}.brand p{color:#555}.brand-mark,.menu-btn,.drawer,.drawer-overlay,.cycle-nav button,.money-card input,.banner,.lock,.ad-slot,.sheet,.sheet-ov,.syncchip{display:none!important}
  .shell{max-width:none;padding:0}.cycle-nav,.hero,.money-card,.day{box-shadow:none;break-inside:avoid}
  .hero{background:#eef2ff;color:#111;border:1px solid #ccd5f5}.eyebrow,.stat-label{color:#444}.stat{background:#fff;border-color:#ddd}.stat-value{color:#111}
  .day{padding:6px;border-radius:6px}.days{gap:4px}
@@ -200,6 +203,7 @@ button{cursor:pointer}
  <div class="banner info" id="installBanner"><div><b>Install this app</b><span>Add it to your home screen. Works offline too.</span></div><button onclick="installApp()">Install</button><button class="ghost" onclick="dismissInstall()">Later</button></div>
  <div class="banner" id="bkBanner"><div><b>Time for a backup</b><span id="bkText"></span></div><button onclick="exportData()">Backup</button><button class="ghost" onclick="snoozeBackup()">Later</button></div>
  <div class="greet" id="greet"></div>
+ <button class="syncchip" id="syncChip" onclick="syncNow()">☁ Not synced. Tap to sync.</button>
  <section class="hero">
   <div class="cycle-nav">
    <button aria-label="Previous salary cycle" onclick="changeCycle(-1)">‹</button>
@@ -494,7 +498,8 @@ const HI={
 'Changing the cycle start changes how your past months are grouped. Your attendance is safe. Continue?':'चक्र की शुरुआत बदलने से पुराने महीने अलग तरह से बँट जाएँगे। आपकी हाज़िरी सुरक्षित है। आगे बढ़ें?',
 'Salary cycle starts on day':'सैलरी चक्र शुरू होने का दिन',
 'Example: 26 means the cycle runs from the 26th to the 25th. 1 means the full month. If a month is shorter, its last day is used.':'उदाहरण: 26 का मतलब है 26 तारीख से अगले महीने की 25 तारीख तक। 1 का मतलब है पूरा महीना। छोटे महीने में आख़िरी दिन लिया जाता है।',
-'On which day of the month does your salary cycle start? Day 1 means the full calendar month. Day 26 means the 26th to the 25th.':'आपका सैलरी चक्र महीने के किस दिन से शुरू होता है? 1 का मतलब पूरा महीना। 26 का मतलब 26 से 25 तारीख तक।'
+'On which day of the month does your salary cycle start? Day 1 means the full calendar month. Day 26 means the 26th to the 25th.':'आपका सैलरी चक्र महीने के किस दिन से शुरू होता है? 1 का मतलब पूरा महीना। 26 का मतलब 26 से 25 तारीख तक।',
+'☁ Not synced. Tap to sync.':'☁ सिंक बाकी है। सिंक करने के लिए टैप करें।'
 };
 
 function tr(x){return LANG==='hi'&&HI[x]||x;}
@@ -611,12 +616,16 @@ function initAds(){
  const el=document.getElementById('adSlot');
  if(!ADS.enabled||!el||el.firstChild||!navigator.onLine)return;
  const f=document.createElement('iframe');
- f.src=ADS.src;f.title='Advertisement';f.loading='lazy';f.height=ADS.height;
+ f.src=ADS.src;f.title='Advertisement';f.height=ADS.height;
  f.setAttribute('sandbox','allow-scripts allow-popups allow-popups-to-escape-sandbox');
  f.setAttribute('referrerpolicy','no-referrer');
- f.style.cssText='width:100%;border:0;display:block';
- el.appendChild(f);el.classList.add('on');
+ f.style.cssText='width:100%;border:0;display:block;color-scheme:light';
+ el.classList.add('pre');el.appendChild(f);
 }
+window.addEventListener('message',e=>{
+ const el=document.getElementById('adSlot'),f=el&&el.firstChild;
+ if(f&&e.source===f.contentWindow&&e.data==='ad-loaded'){el.classList.remove('pre');el.classList.add('on');}
+});
 const CID='706846246485-fu1vh3jlkpopetdg2t1es733rg6ok5an.apps.googleusercontent.com',SCOPE='https://www.googleapis.com/auth/drive.appdata';
 let tokClient,accessToken='',tokExp=0,syncT,syncing=false;
 function initDrive(){
@@ -627,9 +636,12 @@ function getToken(interactive){
  return new Promise((res,rej)=>{
   if(accessToken&&Date.now()<tokExp)return res(accessToken);
   initDrive();if(!tokClient)return rej(new Error('offline'));
-  tokClient.callback=r=>{if(r.error)return rej(new Error(r.error));accessToken=r.access_token;tokExp=Date.now()+(r.expires_in-60)*1000;res(accessToken);};
+  tokClient.callback=r=>{if(r.error)return rej(new Error(r.error));accessToken=r.access_token;tokExp=Date.now()+(r.expires_in-60)*1000;
+   if(!lsGet('salaryDriveHint'))fetch('https://www.googleapis.com/drive/v3/about?fields=user(emailAddress)',{headers:{Authorization:'Bearer '+accessToken}}).then(x=>x.json()).then(j=>{const m=j&&j.user&&j.user.emailAddress;if(m)lsSet('salaryDriveHint',m);}).catch(()=>{});
+   res(accessToken);};
   tokClient.error_callback=e=>rej(new Error((e&&e.type)||'popup'));
-  tokClient.requestAccessToken({prompt:interactive&&lsGet('salaryDriveOn')!=='1'?'consent':''});
+  const o={prompt:interactive&&lsGet('salaryDriveOn')!=='1'?'consent':''},h=lsGet('salaryDriveHint');if(h)o.hint=h;
+  tokClient.requestAccessToken(o);
  });
 }
 async function dfetch(url,opt={},interactive){
@@ -657,20 +669,23 @@ function scheduleSync(){
  if(lsGet('salaryDriveOn')!=='1')return;
  lsSet('salaryDirty','1');setDriveStatus();clearTimeout(syncT);syncT=setTimeout(trySync,2500);
 }
-async function trySync(){
+async function trySync(user){
  if(syncing||lsGet('salaryDriveOn')!=='1'||lsGet('salaryDirty')!=='1'||!navigator.onLine)return;
+ if(!user&&!(accessToken&&Date.now()<tokExp)){setDriveStatus();return;}
  syncing=true;
  try{await pushDrive();lsSet('salaryDirty','0');}catch(e){}
  syncing=false;setDriveStatus();
 }
 function setDriveStatus(){
+ const chip=document.getElementById('syncChip');
+ if(chip)chip.classList.toggle('show',lsGet('salaryDriveOn')==='1'&&lsGet('salaryDirty')==='1'&&!(accessToken&&Date.now()<tokExp));
  const el=document.getElementById('driveSub');if(!el)return;
  const on=lsGet('salaryDriveOn')==='1';
  el.textContent=!on?'Auto-backup to your Google Drive':lsGet('salaryDirty')==='1'?'Connected · syncs when online':'Connected · synced '+new Date(Number(lsGet('salaryDriveLast'))).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 }
 async function connectDrive(){
  if(lsGet('salaryDriveOn')==='1'){
-  if(confirm(tr('Disconnect Google Drive backup? Your backup file stays in your Drive.'))){lsSet('salaryDriveOn','0');setDriveStatus();checkBackup();}
+  if(confirm(tr('Disconnect Google Drive backup? Your backup file stays in your Drive.'))){lsSet('salaryDriveOn','0');try{localStorage.removeItem('salaryDriveHint');}catch(e){}setDriveStatus();checkBackup();}
   return;
  }
  try{
@@ -687,7 +702,7 @@ async function connectDrive(){
  }catch(e){showToast('Could not connect. Check internet and try again.');}
 }
 window.addEventListener('online',trySync);
-document.addEventListener('click',()=>{if(lsGet('salaryDriveOn')==='1'&&lsGet('salaryDirty')==='1'&&!(accessToken&&Date.now()<tokExp))trySync();},true);
+function syncNow(){trySync(true);}
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
 function isPaidOff(d){const t=new Date();t.setHours(23,59,59,999);return !isMonthly()&&data.settings.weeklyOff>=0&&d.getDay()===data.settings.weeklyOff&&d<=t;}
