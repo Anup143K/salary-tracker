@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com; connect-src 'self' https://www.googleapis.com https://accounts.google.com; frame-src 'self' https://accounts.google.com; img-src 'self' data: blob:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#101827">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -604,11 +606,16 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPro
 window.addEventListener('appinstalled',()=>{deferredPrompt=null;hideInstall();});
 /* ADS (off for now). To add ads later: set enabled:true and put the ad network code inside initAds().
    Keep ads inside #adSlot only. Never pass tracker or Google Drive data to any ad code. */
-const ADS={enabled:false};
+const ADS={enabled:true,src:'ads.html',height:60};
 function initAds(){
  const el=document.getElementById('adSlot');
- if(!ADS.enabled||!el)return;
- el.classList.add('on');
+ if(!ADS.enabled||!el||el.firstChild||!navigator.onLine)return;
+ const f=document.createElement('iframe');
+ f.src=ADS.src;f.title='Advertisement';f.loading='lazy';f.height=ADS.height;
+ f.setAttribute('sandbox','allow-scripts allow-popups allow-popups-to-escape-sandbox');
+ f.setAttribute('referrerpolicy','no-referrer');
+ f.style.cssText='width:100%;border:0;display:block';
+ el.appendChild(f);el.classList.add('on');
 }
 const CID='706846246485-fu1vh3jlkpopetdg2t1es733rg6ok5an.apps.googleusercontent.com',SCOPE='https://www.googleapis.com/auth/drive.appdata';
 let tokClient,accessToken='',tokExp=0,syncT,syncing=false;

@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Isolated ad page. index.html loads it in a sandboxed iframe (no access to the app, its data or the Drive login). -->
+<!-- Network: Adsterra, Banner 320x50. Allowed only inside this sandbox. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https:; style-src 'unsafe-inline' https:; img-src https: data:; frame-src https: data: blob:; connect-src https:; base-uri 'none'; form-action 'none'">
+<title>Advertisement</title><style>html,body{margin:0;background:transparent}body{display:flex;justify-content:center;align-items:flex-start;padding-top:4px}</style></head>
+<body>
+<script>
+  atOptions = {
+    'key' : '9221f64a8308e081b40893354098403e',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script data-cfasync="false" src="https://bauval.org/22/9221f64a8308e081b40893354098403e"></script>
+</body></html>
