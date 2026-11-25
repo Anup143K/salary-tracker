@@ -73,7 +73,7 @@ button{cursor:pointer}
 .money-card input{width:100%;border:1px solid var(--line);background:var(--surface-2);padding:10px 11px;border-radius:10px;font-size:16px;font-weight:700;color:var(--text);outline:none}
 .money-card input:focus,.modal input:focus{border-color:var(--primary);box-shadow:0 0 0 3px #3457d51a}
 .balance{font-size:21px;font-weight:800;color:var(--green);margin-top:4px}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 2px 10px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 2px 10px}
 .section-head h2{font-size:16px;margin:0}
 .section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
 .days{display:grid;gap:8px}
@@ -168,9 +168,9 @@ button{cursor:pointer}
 .banner.info button{background:var(--primary)}.banner.info .ghost{background:transparent;color:var(--primary)}
 .syncchip{display:none;margin-top:14px;width:100%;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--primary-soft);color:var(--primary);font-size:12px;font-weight:700;text-align:left}
 .syncchip.show{display:block}
-.ad-slot{display:none}
-.ad-slot.pre{display:block;height:0;min-height:0;margin:0;overflow:hidden}
-.ad-slot.on{display:block;margin:20px 0 6px;min-height:60px;text-align:center;border-radius:14px;overflow:hidden}
+.ad-slot{display:none;margin:14px 0 6px;min-height:60px;text-align:center;border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:0 3px 12px rgba(26,42,76,.025)}
+.ad-slot.pre{display:block;opacity:0;transition:opacity .3s ease}
+.ad-slot.on{display:block;opacity:1}
 @media(max-width:600px){
  .topbar{padding:14px 13px 16px}.brand h1{font-size:15px}.brand-mark{width:38px;height:38px}
  .shell{padding:0 11px}.stats{gap:5px}.stat{padding:9px 6px}.stat-label{font-size:9px}.stat-value{font-size:14px}
@@ -227,11 +227,12 @@ button{cursor:pointer}
  </section>
  <div class="adv-list" id="advList"></div>
 
+ <div class="ad-slot" id="adSlot" aria-label="Advertisement"></div>
+
  <div class="section-head">
   <div><h2>Daily Attendance</h2><p>Tap a status to mark your day. Add overtime hours if applicable.</p></div>
  </div>
  <div id="daysList" class="days"></div>
- <div class="ad-slot" id="adSlot" aria-label="Advertisement"></div>
  <div id="emptyNote" class="empty-note">No attendance entries yet. Start by marking today's status.</div>
 
 </main>
@@ -460,7 +461,15 @@ function openChart(){
  document.getElementById('chartOverlay').classList.add('show');
 }
 function shareSummary(){
- const n=snap,text=`${(data.settings.name||'').trim()||'My'}'s Salary Summary\n${n.label}\n\nPresent: ${n.p} | Absent: ${n.a} | Half: ${n.h}\nOT: ${n.ot} hrs (${money(n.otAmt)})\n\nEarned: ${money(n.total)}\nAdvance: ${money(n.adv)}\nBalance: ${money(n.total-n.adv)}`;
+ const n=snap,text=`${(data.settings.name||'').trim()||'My'}'s Salary Summary
+${n.label}
+
+Present: ${n.p} | Absent: ${n.a} | Half: ${n.h}
+OT: ${n.ot} hrs (${money(n.otAmt)})
+
+Earned: ${money(n.total)}
+Advance: ${money(n.adv)}
+Balance: ${money(n.total-n.adv)}`;
  if(navigator.share){navigator.share({text}).catch(()=>{});return;}
  (navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(()=>showToast('Summary copied.')).catch(()=>showToast('Sharing is not supported here.'));
 }
@@ -609,9 +618,13 @@ async function installApp(){
 }
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;showInstall();});
 window.addEventListener('appinstalled',()=>{deferredPrompt=null;hideInstall();});
-/* ADS (off for now). To add ads later: set enabled:true and put the ad network code inside initAds().
-   Keep ads inside #adSlot only. Never pass tracker or Google Drive data to any ad code. */
+
+/* SECURE SANDBOXED ADS: Keep ads inside #adSlot only. Never pass tracker or Google Drive data to any ad code. */
 const ADS={enabled:true,src:'ads.html',height:60};
+function showAdSlot(){
+ const el=document.getElementById('adSlot');
+ if(el){el.classList.remove('pre');el.classList.add('on');}
+}
 function initAds(){
  const el=document.getElementById('adSlot');
  if(!ADS.enabled||!el||el.firstChild||!navigator.onLine)return;
@@ -619,13 +632,16 @@ function initAds(){
  f.src=ADS.src;f.title='Advertisement';f.height=ADS.height;
  f.setAttribute('sandbox','allow-scripts allow-popups allow-popups-to-escape-sandbox');
  f.setAttribute('referrerpolicy','no-referrer');
- f.style.cssText='width:100%;border:0;display:block;color-scheme:light';
+ f.style.cssText='width:100%;height:'+ADS.height+'px;border:0;display:block;color-scheme:light';
  el.classList.add('pre');el.appendChild(f);
+ f.onload=()=>setTimeout(showAdSlot,1200);
 }
 window.addEventListener('message',e=>{
  const el=document.getElementById('adSlot'),f=el&&el.firstChild;
- if(f&&e.source===f.contentWindow&&e.data==='ad-loaded'){el.classList.remove('pre');el.classList.add('on');}
+ if(f&&e.source===f.contentWindow&&e.data==='ad-loaded')showAdSlot();
 });
+window.addEventListener('online',initAds);
+
 const CID='706846246485-fu1vh3jlkpopetdg2t1es733rg6ok5an.apps.googleusercontent.com',SCOPE='https://www.googleapis.com/auth/drive.appdata';
 let tokClient,accessToken='',tokExp=0,syncT,syncing=false;
 function initDrive(){
@@ -660,7 +676,15 @@ async function pushDrive(){
  const body=JSON.stringify(data),f=await findFile();
  if(f)await dfetch('https://www.googleapis.com/upload/drive/v3/files/'+f.id+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body});
  else{
-  const b='sal_bnd',m=`--${b}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({name:'salary-backup.json',parents:['appDataFolder']})}\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${b}--`;
+  const b='sal_bnd',m=`--${b}
+Content-Type: application/json
+
+${JSON.stringify({name:'salary-backup.json',parents:['appDataFolder']})}
+--${b}
+Content-Type: application/json
+
+${body}
+--${b}--`;
   await dfetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+b},body:m});
  }
  lsSet('salaryDriveLast',Date.now());
@@ -693,7 +717,10 @@ async function connectDrive(){
   const has=Object.values(data.entries).some(e=>e&&(e.status||e.ot))||Object.values(data.advList).some(a=>a.length);
   if(f){
    const remote=await(await dfetch('https://www.googleapis.com/drive/v3/files/'+f.id+'?alt=media')).json();
-   if(!has||confirm('A backup from '+new Date(f.modifiedTime).toLocaleString()+' was found in Google Drive.\n\nOK = load the Drive backup here.\nCancel = keep this phone\'s data and replace the Drive backup.')){
+   if(!has||confirm('A backup from '+new Date(f.modifiedTime).toLocaleString()+' was found in Google Drive.
+
+OK = load the Drive backup here.
+Cancel = keep this phone's data and replace the Drive backup.')){
     data=migrate(remote);applyName();setGreet();cycleOffset=0;
    }
   }
