@@ -298,9 +298,8 @@ button{cursor:pointer}
   <div class="field"><label for="setOtRate">Overtime rate per hour (₹)</label><input type="number" id="setOtRate" min="0" step="0.01"></div>
   <div class="field" id="fOff"><label for="setOff">Paid weekly off</label><select id="setOff"><option value="-1">No paid off (I get paid only for days I work)</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select><p class="intro" style="margin:7px 0 0">If your company pays for this day even when you do not work, pick the day. Mark A on a day to cancel its pay.</p></div>
   <div class="field" id="fHalf"><label for="setHalfRate">Half-day salary (₹) — leave blank for automatic half</label><input type="number" id="setHalfRate" min="0" step="0.01" placeholder="Auto: 50% of full-day rate"></div>
-  <div class="field"><label>Salary cycle (day of month)</label>
-   <div style="display:flex;gap:9px;align-items:center"><input type="number" id="setCycStart" min="1" max="31" step="1" placeholder="Start"><span style="color:var(--muted)">to</span><input type="number" id="setCycEnd" min="1" max="31" step="1" placeholder="End"></div>
-   <p class="intro" style="margin:7px 0 0">Example: 26 to 25. End day 30 or 31 means end of month: 28, 29, 30 or 31 automatically, so no day is ever missed.</p></div>
+  <div class="field"><label for="setCycStart">Salary cycle starts on day</label><input type="number" id="setCycStart" min="1" max="31" step="1">
+   <p class="intro" style="margin:7px 0 0">Example: 26 means the cycle runs from the 26th to the 25th. 1 means the full month. If a month is shorter, its last day is used.</p></div>
   <div class="btn-row"><button class="cancel-btn" onclick="closeSettings()">Cancel</button><button class="save-btn" onclick="saveSettings()">Save Settings</button></div>
  </div>
 </div>
@@ -364,15 +363,13 @@ function money(value){ const v=Number(value||0);return (v<0?'-':'')+'₹'+Math.a
 function clampDay(y,m,d){return Math.min(d,new Date(y,m+1,0).getDate());}
 function endDay(y,m,E){return E>=30?new Date(y,m+1,0).getDate():clampDay(y,m,E);}
 function getCycleBounds(offset){
- const t=new Date(),S=Math.min(31,Math.max(1,Math.round(Number(data.settings.cycleStart))||26)),E=Math.min(31,Math.max(1,Math.round(Number(data.settings.cycleEnd))||25));
- const same=E>=S;let y=t.getFullYear(),m=t.getMonth();
- if(!same&&t.getDate()<clampDay(y,m,S))m--;
+ const t=new Date(),S=Math.min(31,Math.max(1,Math.round(Number(data.settings.cycleStart))||26));
+ let y=t.getFullYear(),m=t.getMonth();
+ if(t.getDate()<clampDay(y,m,S))m--;
  const base=new Date(y,m+offset,1),by=base.getFullYear(),bm=base.getMonth();
  const start=new Date(by,bm,clampDay(by,bm,S));
- let end;
- if(same)end=new Date(by,bm,endDay(by,bm,E));
- else{const n=new Date(by,bm+1,1);end=new Date(n.getFullYear(),n.getMonth(),endDay(n.getFullYear(),n.getMonth(),E));}
- return {start,end};
+ const nx=new Date(by,bm+1,1),next=new Date(nx.getFullYear(),nx.getMonth(),clampDay(nx.getFullYear(),nx.getMonth(),S));
+ return {start,end:new Date(next.getFullYear(),next.getMonth(),next.getDate()-1)};
 }
 function cycleKeyFor(start){ return `${start.getFullYear()}-${pad(start.getMonth()+1)}`; }
 function monthName(m){ return (LANG==='hi'?['जन॰','फ़र॰','मार्च','अप्रैल','मई','जून','जुल॰','अग॰','सित॰','अक्तू॰','नव॰','दिस॰']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])[m]; }
@@ -390,18 +387,29 @@ function updateOT(key,val){
 function todayKey(){const n=new Date();return dateKey(n.getFullYear(),n.getMonth(),n.getDate());}
 function fmtD(k){const [y,m,d]=k.split('-');return `${+d} ${monthName(m-1)}`;}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
-function openAdv(){document.getElementById('advAmt').value='';document.getElementById('advDate').value=todayKey();document.getElementById('advOverlay').classList.add('show');}
+function keyOf(d){return dateKey(d.getFullYear(),d.getMonth(),d.getDate());}
+function cycAdv(start,end){
+ const sk=keyOf(start),ek=keyOf(end),ck=cycleKeyFor(start),out=[];
+ for(const k in data.advList)data.advList[k].forEach((x,i)=>{if(x.d?(x.d>=sk&&x.d<=ek):k===ck)out.push({k,i,x});});
+ return out;
+}
+function openAdv(){
+ const {start,end}=getCycleBounds(cycleOffset),sk=keyOf(start),ek=keyOf(end),tk=todayKey(),el=document.getElementById('advDate');
+ document.getElementById('advAmt').value='';el.min=sk;el.max=ek;el.value=tk<sk?sk:tk>ek?ek:tk;
+ document.getElementById('advOverlay').classList.add('show');
+}
 function saveAdv(){
- const a=Number.parseFloat(document.getElementById('advAmt').value);
+ const a=Number.parseFloat(document.getElementById('advAmt').value),dv=document.getElementById('advDate').value;
+ const {start,end}=getCycleBounds(cycleOffset);
  if(!(a>0)){showToast('Enter a valid amount.');return;}
- const ck=cycleKeyFor(getCycleBounds(cycleOffset).start);
- (data.advList[ck]=data.advList[ck]||[]).push({d:document.getElementById('advDate').value,a});
+ if(!dv||dv<keyOf(start)||dv>keyOf(end)){showToast('Date must be inside this salary cycle.');return;}
+ const ck=cycleKeyFor(start);
+ (data.advList[ck]=data.advList[ck]||[]).push({d:dv,a});
  save();closeOv('advOverlay');render();showToast('Advance added.');
 }
-function delAdv(i){
- const ck=cycleKeyFor(getCycleBounds(cycleOffset).start);
+function delAdv(k,i){
  if(!confirm(tr('Delete this advance entry?')))return;
- (data.advList[ck]||[]).splice(i,1);save();render();
+ (data.advList[k]||[]).splice(i,1);save();render();
 }
 function animateTo(el,to){
  const from=el._v||0;el._v=to;
@@ -479,7 +487,12 @@ const HI={
 'Cycle days must be between 1 and 31.':'चक्र के दिन 1 से 31 के बीच होने चाहिए।',
 'Enter a valid monthly salary.':'सही मासिक सैलरी डालें।',
 'Please enter valid, non-negative rates.':'कृपया सही रेट डालें (शून्य या उससे ज़्यादा)।',
-'Sharing is not supported here.':'यहाँ शेयर करना संभव नहीं है।'
+'Sharing is not supported here.':'यहाँ शेयर करना संभव नहीं है।',
+'Date must be inside this salary cycle.':'तारीख इस सैलरी चक्र के अंदर होनी चाहिए।',
+'Changing the cycle start changes how your past months are grouped. Your attendance is safe. Continue?':'चक्र की शुरुआत बदलने से पुराने महीने अलग तरह से बँट जाएँगे। आपकी हाज़िरी सुरक्षित है। आगे बढ़ें?',
+'Salary cycle starts on day':'सैलरी चक्र शुरू होने का दिन',
+'Example: 26 means the cycle runs from the 26th to the 25th. 1 means the full month. If a month is shorter, its last day is used.':'उदाहरण: 26 का मतलब है 26 तारीख से अगले महीने की 25 तारीख तक। 1 का मतलब है पूरा महीना। छोटे महीने में आख़िरी दिन लिया जाता है।',
+'On which day of the month does your salary cycle start? Day 1 means the full calendar month. Day 26 means the 26th to the 25th.':'आपका सैलरी चक्र महीने के किस दिन से शुरू होता है? 1 का मतलब पूरा महीना। 26 का मतलब 26 से 25 तारीख तक।'
 };
 
 function tr(x){return LANG==='hi'&&HI[x]||x;}
@@ -507,8 +520,8 @@ function wizRender(){
   b.innerHTML=`<h2>How are you paid?</h2><p>This sets how your salary is calculated.</p><div class="wopt"><button id="tDaily" onclick="wizType('daily')">Per day</button><button id="tMonthly" onclick="wizType('monthly')">Fixed monthly</button></div><label id="wAmtL"></label><input id="wAmt" type="number" inputmode="decimal" min="0"><label>Do you get overtime (OT)?</label><div class="wopt"><button id="oYes" onclick="wizOt(1)">Yes</button><button id="oNo" onclick="wizOt(0)">No</button></div><div id="wOtBox"><label>Overtime pay per hour (₹)</label><input id="wOt" type="number" inputmode="decimal" min="0"></div><div id="wOffBox"><label>Does your company pay for a weekly off?</label><select id="wOff"><option value="-1">No, only days I work</option><option value="0">Yes, Sunday</option><option value="1">Yes, Monday</option><option value="2">Yes, Tuesday</option><option value="3">Yes, Wednesday</option><option value="4">Yes, Thursday</option><option value="5">Yes, Friday</option><option value="6">Yes, Saturday</option></select></div>`+nav('wizNext()','Continue');
   $('wAmt').value=wz.amt;$('wOt').value=wz.ot;$('wOff').value=wz.off;wizSync();
  }else if(s===3){
-  b.innerHTML=`<h2>Your salary cycle</h2><p>From which day to which day of the month is your salary counted? 1 to 31 means the full calendar month. Day 30 or 31 as the end means the last day of every month.</p><div class="wrow"><div><label>From day</label><input id="wCs" type="number" inputmode="numeric" min="1" max="31"></div><div><label>To day</label><input id="wCe" type="number" inputmode="numeric" min="1" max="31"></div></div>`+nav('wizNext()','Continue');
-  $('wCs').value=wz.cs;$('wCe').value=wz.ce;
+  b.innerHTML=`<h2>Your salary cycle</h2><p>On which day of the month does your salary cycle start? Day 1 means the full calendar month. Day 26 means the 26th to the 25th.</p><label>Salary cycle starts on day</label><input id="wCs" type="number" inputmode="numeric" min="1" max="31">`+nav('wizNext()','Continue');
+  $('wCs').value=wz.cs;
  }else{
   b.innerHTML=`<h2>Back up to Google Drive?</h2><p>Keeps your data safe if you change or lose your phone. It uses a private app folder in your own Drive. You can also do this later from the menu.</p><button class="wbtn" onclick="wizFinish(true)">Connect Google Drive</button><button class="wbtn ghost" onclick="wizFinish(false)">Skip for now</button><button class="wlink" onclick="wizBack()">← Back</button>`;
  }
@@ -516,7 +529,7 @@ function wizRender(){
 function wizTake(){
  if(wz.s===1)wz.name=$('wName').value.trim().slice(0,20);
  if(wz.s===2){wz.amt=$('wAmt').value;wz.ot=$('wOt').value;wz.off=$('wOff').value;}
- if(wz.s===3){wz.cs=$('wCs').value;wz.ce=$('wCe').value;}
+ if(wz.s===3){wz.cs=$('wCs').value;}
 }
 function wizSync(){
  $('tDaily').classList.toggle('on',wz.type==='daily');$('tMonthly').classList.toggle('on',wz.type==='monthly');
@@ -534,7 +547,7 @@ function wizNext(){
   if(!(Number(wz.amt)>0)){showToast('Enter your salary amount.');return;}
   if(wz.otOn&&wz.ot!==''&&!(Number(wz.ot)>=0)){showToast('Enter a valid overtime rate.');return;}
  }
- if(wz.s===3){const a=Number(wz.cs),c=Number(wz.ce);if(!Number.isInteger(a)||!Number.isInteger(c)||a<1||a>31||c<1||c>31){showToast('Days must be between 1 and 31.');return;}}
+ if(wz.s===3){const a=Number(wz.cs);if(!Number.isInteger(a)||a<1||a>31){showToast('Days must be between 1 and 31.');return;}}
  wz.s++;wizRender();
 }
 function wizFinish(connect){
@@ -542,7 +555,7 @@ function wizFinish(connect){
  st.name=wz.name;st.payType=wz.type;
  if(wz.type==='daily')st.dayRate=Number(wz.amt);else st.monthlySalary=Number(wz.amt);
  st.otRate=wz.otOn?(Number(wz.ot)||0):0;st.halfRate=null;st.weeklyOff=wz.type==='daily'?Math.min(6,Math.max(-1,Math.round(Number(wz.off)))):-1;
- st.cycleStart=Number(wz.cs);st.cycleEnd=Number(wz.ce);st.setupDone=true;
+ st.cycleStart=Number(wz.cs);st.cycleEnd=st.cycleStart>1?st.cycleStart-1:31;st.setupDone=true;
  cycleOffset=0;save();$('wiz').classList.remove('show');
  applyName();setGreet();render();checkBackup();showToast('All set, '+st.name+'!');
  if(connect)connectDrive();
@@ -709,7 +722,6 @@ function openSettings(){
  document.getElementById('setName').value=data.settings.name||'';document.getElementById('setLang').value=LANG;
  document.getElementById('setPayType').value=data.settings.payType;document.getElementById('setMonthly').value=data.settings.monthlySalary||'';document.getElementById('setOff').value=String(data.settings.weeklyOff);syncPayFields();
  document.getElementById('setCycStart').value=data.settings.cycleStart;
- document.getElementById('setCycEnd').value=data.settings.cycleEnd;
  document.getElementById('settingsOverlay').classList.add('show');
 }
 function closeSettings(){document.getElementById('settingsOverlay').classList.remove('show');}
@@ -720,13 +732,14 @@ function saveSettings(){
  if(!Number.isFinite(dr)||dr<0||!Number.isFinite(ot)||ot<0||(halfRaw!==''&&(!Number.isFinite(Number(halfRaw))||Number(halfRaw)<0))){
   showToast('Please enter valid, non-negative rates.');return;
  }
- const cs=Number(document.getElementById('setCycStart').value),ce=Number(document.getElementById('setCycEnd').value);
- if(!Number.isInteger(cs)||!Number.isInteger(ce)||cs<1||cs>31||ce<1||ce>31){showToast('Cycle days must be between 1 and 31.');return;}
+ const cs=Number(document.getElementById('setCycStart').value);
+ if(!Number.isInteger(cs)||cs<1||cs>31){showToast('Cycle days must be between 1 and 31.');return;}
+ if(cs!==Number(data.settings.cycleStart)&&hasData()&&!confirm(tr('Changing the cycle start changes how your past months are grouped. Your attendance is safe. Continue?')))return;
  const mo=Number(document.getElementById('setMonthly').value||0);
  if(!Number.isFinite(mo)||mo<0){showToast('Enter a valid monthly salary.');return;}
  data.settings.payType=document.getElementById('setPayType').value==='monthly'?'monthly':'daily';data.settings.monthlySalary=mo;data.settings.weeklyOff=Math.min(6,Math.max(-1,Math.round(Number(document.getElementById('setOff').value))));
  data.settings.name=document.getElementById('setName').value.trim().slice(0,20);
- data.settings.cycleStart=cs;data.settings.cycleEnd=ce;
+ data.settings.cycleStart=cs;data.settings.cycleEnd=cs>1?cs-1:31;
  data.settings.dayRate=dr;data.settings.otRate=ot;
  data.settings.halfRate=halfRaw===''?null:Number(halfRaw);
  save();{const nl=document.getElementById('setLang').value==='hi'?'hi':'en';if(nl!==LANG){lsSet('salaryLang',nl);location.reload();return;}}closeSettings();cycleOffset=0;applyName();setGreet();render();showToast('Settings updated.');
@@ -786,10 +799,10 @@ function render(){
  document.getElementById('cntOT').textContent=Number.isInteger(otHrs)?otHrs:otHrs.toFixed(1);
  document.getElementById('amtOT').textContent=money(otAmt);
  animateTo(document.getElementById('totalAmount'),total);
- const al=data.advList[cycleKeyFor(start)]||[],adv=al.reduce((x,y)=>x+y.a,0);
+ const al=cycAdv(start,end),adv=al.reduce((t2,r)=>t2+r.x.a,0);
  document.getElementById('advTotal').textContent=money(adv);
  document.getElementById('balanceAmt').textContent=money(total-adv);
- document.getElementById('advList').innerHTML=al.map((x,i)=>`<div class="adv-item"><span>${x.d?fmtD(x.d):'Earlier'}</span><b>${money(x.a)}</b><button aria-label="Delete advance" onclick="delAdv(${i})">×</button></div>`).join('');
+ document.getElementById('advList').innerHTML=al.map(r=>`<div class="adv-item"><span>${r.x.d?fmtD(r.x.d):'Earlier'}</span><b>${money(r.x.a)}</b><button aria-label="Delete advance" onclick="delAdv('${r.k}',${r.i})">×</button></div>`).join('');
  snap={label:document.getElementById('cycleLabel').textContent,p:cntP,a:cntA,h:cntH,ot:otHrs,otAmt,total,adv};
 }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
