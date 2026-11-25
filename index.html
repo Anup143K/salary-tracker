@@ -124,6 +124,7 @@ button{cursor:pointer}
 .adv-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
 .adv-item:last-child{border:0}.adv-item b{margin-left:auto;color:var(--text);font-size:13px}
 .adv-item button{border:0;background:var(--red-soft);color:var(--red);width:26px;height:26px;border-radius:8px;font-size:16px;line-height:1}
+.day.off{background:var(--surface-2)}
 .day.today{border-color:var(--primary);box-shadow:0 0 0 3px #3457d51f}
 .date.sun b{color:var(--red)}
 .chart{display:flex;gap:8px;height:190px;align-items:stretch;margin:6px 0 4px}
@@ -137,6 +138,30 @@ button{cursor:pointer}
 .lock .lm{width:58px;height:58px;border-radius:18px;background:#ffffff1a;display:grid;place-items:center;font-size:26px;margin:auto}
 .lock input{width:180px;background:#ffffff14;border:1px solid #ffffff30;border-radius:16px;color:#fff;font-size:28px;letter-spacing:14px;text-align:center;padding:12px 0 12px 14px;outline:none}
 .lock p{height:16px;margin:12px 0 0;font-size:12px;color:#ff9aa0}
+.wiz select,.modal select{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:14px;color:var(--text);outline:none}
+.wiz{position:fixed;inset:0;z-index:250;background:var(--bg);display:none;overflow:auto;padding:24px 20px}
+.wiz.show{display:flex;align-items:center;justify-content:center}
+.wiz-card{width:100%;max-width:420px}
+.wiz-dots{display:flex;gap:6px;margin-bottom:26px}.wiz-dots i{flex:1;height:5px;border-radius:9px;background:var(--line)}.wiz-dots i.on{background:var(--primary)}
+.wiz h2{font-size:26px;margin:0 0 8px}.wiz p{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 18px}
+.wiz label{display:block;font-size:12px;color:var(--muted);font-weight:650;margin:16px 0 7px}
+.wiz input{width:100%;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--surface);font-size:17px;color:var(--text);outline:none}
+.wiz input:focus{border-color:var(--primary);box-shadow:0 0 0 3px #3457d51a}
+.wopt{display:flex;gap:9px;margin-top:6px}.wopt button{flex:1;padding:13px 8px;border-radius:13px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:700;font-size:14px}.wopt button.on{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}
+.wbtn{width:100%;margin-top:22px;padding:15px;border:0;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:750}
+.wbtn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line);margin-top:10px}
+.wlink{display:block;width:100%;margin-top:14px;background:none;border:0;color:var(--primary);font-size:13px;font-weight:650}
+.wrow{display:flex;gap:10px}.wrow>div{flex:1}
+.sheet-ov{position:fixed;inset:0;background:#0a0f1c8c;opacity:0;pointer-events:none;transition:opacity .25s;z-index:119}
+.sheet-ov.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--surface);border-radius:26px 26px 0 0;padding:20px 18px 22px;z-index:120;transform:translateY(105%);transition:transform .3s cubic-bezier(.22,.8,.3,1);box-shadow:0 -12px 40px #0003}
+.sheet.show{transform:translateY(0)}
+.sheet-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:15px}.sheet-top span{font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{border:1px solid var(--line);background:var(--surface-2);color:var(--text);padding:12px 16px;border-radius:13px;font-size:16px;font-weight:700}
+.chip.on{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}
+.meaning{margin:18px -18px 0;padding:14px 18px;background:var(--surface-2);font-size:12px;color:var(--muted);line-height:1.9}.meaning b{color:var(--text)}.meaning span{display:inline-block;margin-right:14px}
+.sheet .btn-row{margin-top:16px}
 .banner.info{background:var(--primary-soft);border-color:#cdd8ff;color:var(--primary)}
 .banner.info button{background:var(--primary)}.banner.info .ghost{background:transparent;color:var(--primary)}
 .ad-slot{display:none}
@@ -149,7 +174,7 @@ button{cursor:pointer}
 }
 @media(max-width:370px){.stats{grid-template-columns:repeat(3,1fr)}.day{grid-template-columns:38px minmax(0,1fr) 56px}.status-area{gap:4px}.sbtn{min-width:31px}}
 @media print{
- body{background:#fff;padding:0}.topbar{background:#fff;color:#111;padding:10px 0}.brand p{color:#555}.brand-mark,.menu-btn,.drawer,.drawer-overlay,.cycle-nav button,.money-card input,.banner,.lock,.ad-slot{display:none!important}
+ body{background:#fff;padding:0}.topbar{background:#fff;color:#111;padding:10px 0}.brand p{color:#555}.brand-mark,.menu-btn,.drawer,.drawer-overlay,.cycle-nav button,.money-card input,.banner,.lock,.ad-slot,.sheet,.sheet-ov{display:none!important}
  .shell{max-width:none;padding:0}.cycle-nav,.hero,.money-card,.day{box-shadow:none;break-inside:avoid}
  .hero{background:#eef2ff;color:#111;border:1px solid #ccd5f5}.eyebrow,.stat-label{color:#444}.stat{background:#fff;border-color:#ddd}.stat-value{color:#111}
  .day{padding:6px;border-radius:6px}.days{gap:4px}
@@ -249,6 +274,14 @@ button{cursor:pointer}
 <div class="overlay" id="pinOverlay"><div class="modal"><h2>PIN Lock</h2><p class="intro">Asks for a 4-digit PIN when the tracker opens. Keep a Backup: if you forget the PIN, the only way in is clearing browser data.</p>
  <div class="field"><label for="pinNew">New 4-digit PIN</label><input type="password" id="pinNew" inputmode="numeric" maxlength="4" autocomplete="off"></div>
  <div class="btn-row"><button class="cancel-btn" onclick="closeOv('pinOverlay')">Cancel</button><button class="cancel-btn" id="pinRm" style="color:var(--red)" onclick="removePin()">Remove</button><button class="save-btn" onclick="savePin()">Save</button></div></div></div>
+<div class="sheet-ov" id="sheetOv" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Mark attendance">
+ <div class="sheet-top"><b>Mark Attendance</b><span id="sheetDate"></span></div>
+ <div class="chips" id="sheetChips"></div>
+ <div class="meaning"><span><b>A</b> Absent</span><span><b>½</b> Half day</span><span><b>P</b> Present</span><span><b>P+½</b> 1.5 days</span><span><b>P+P</b> Double</span><span><b>PA</b> Paid leave</span></div>
+ <div class="btn-row"><button class="cancel-btn" onclick="closeSheet()">Cancel</button><button class="cancel-btn" onclick="sheetClear()">Clear</button><button class="save-btn" onclick="sheetOk()">OK</button></div>
+</div>
+<div class="wiz" id="wiz"><div class="wiz-card"><div class="wiz-dots" id="wizDots"></div><div id="wizBody"></div></div></div>
 <div class="lock" id="lock"><div><div class="lm">🔒</div><h3>Enter PIN</h3><input id="lockPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" oninput="checkPin()"><p id="lockMsg"></p></div></div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -258,9 +291,13 @@ button{cursor:pointer}
   <h2 id="settingsTitle">Salary Settings</h2>
   <p class="intro">Set your payment rates. Changes apply to the selected and other cycles using these settings.</p>
   <div class="field"><label for="setName">Your name</label><input type="text" id="setName" maxlength="20" placeholder="e.g. Anup" autocomplete="off"></div>
-  <div class="field"><label for="setDayRate">Full-day salary (₹)</label><input type="number" id="setDayRate" min="0" step="0.01"></div>
+  <div class="field"><label for="setLang">Language</label><select id="setLang"><option value="en">English</option><option value="hi">हिन्दी</option></select></div>
+  <div class="field"><label for="setPayType">Salary type</label><select id="setPayType" onchange="syncPayFields()"><option value="daily">Per day</option><option value="monthly">Fixed monthly</option></select></div>
+  <div class="field" id="fMonthly"><label for="setMonthly">Monthly salary (₹)</label><input type="number" id="setMonthly" min="0" step="0.01"></div>
+  <div class="field" id="fDay"><label for="setDayRate">Full-day salary (₹)</label><input type="number" id="setDayRate" min="0" step="0.01"></div>
   <div class="field"><label for="setOtRate">Overtime rate per hour (₹)</label><input type="number" id="setOtRate" min="0" step="0.01"></div>
-  <div class="field"><label for="setHalfRate">Half-day salary (₹) — leave blank for automatic half</label><input type="number" id="setHalfRate" min="0" step="0.01" placeholder="Auto: 50% of full-day rate"></div>
+  <div class="field" id="fOff"><label for="setOff">Paid weekly off</label><select id="setOff"><option value="-1">No paid off (I get paid only for days I work)</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select><p class="intro" style="margin:7px 0 0">If your company pays for this day even when you do not work, pick the day. Mark A on a day to cancel its pay.</p></div>
+  <div class="field" id="fHalf"><label for="setHalfRate">Half-day salary (₹) — leave blank for automatic half</label><input type="number" id="setHalfRate" min="0" step="0.01" placeholder="Auto: 50% of full-day rate"></div>
   <div class="field"><label>Salary cycle (day of month)</label>
    <div style="display:flex;gap:9px;align-items:center"><input type="number" id="setCycStart" min="1" max="31" step="1" placeholder="Start"><span style="color:var(--muted)">to</span><input type="number" id="setCycEnd" min="1" max="31" step="1" placeholder="End"></div>
    <p class="intro" style="margin:7px 0 0">Example: 26 to 25. End day 30 or 31 means end of month: 28, 29, 30 or 31 automatically, so no day is ever missed.</p></div>
@@ -271,8 +308,9 @@ button{cursor:pointer}
 <script>
 'use strict';
 const CYCLE_START_DAY = 26;
-const DEFAULT_SETTINGS = { dayRate: 512, otRate: 100, halfRate: null, name: 'Anup', cycleStart: 26, cycleEnd: 25 };
+const DEFAULT_SETTINGS = { dayRate: 512, otRate: 100, halfRate: null, name: 'Anup', cycleStart: 26, cycleEnd: 25, payType: 'daily', monthlySalary: 0, setupDone: false, weeklyOff: -1 };
 const STORAGE_KEY = 'salaryData';
+let LANG=(function(){try{return localStorage.getItem('salaryLang')==='hi'?'hi':'en';}catch(e){return 'en';}})();
 let data = loadData();
 let cycleOffset = 0;
 
@@ -292,7 +330,7 @@ function migrate(d){
  const isD=k=>typeof k==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(k),num=(v,max)=>Math.min(max,Math.max(0,Number(v)||0));
  const ci=(v,def)=>{v=Math.round(Number(v));return v>=1&&v<=31?v:def;};
  const out={entries:{},advances:{},advList:{}};
- for(const k in (d.entries||{})){const e=d.entries[k];if(isD(k)&&e&&typeof e==='object')out.entries[k]={status:['P','A','H'].includes(e.status)?e.status:'',ot:num(e.ot,24)};}
+ for(const k in (d.entries||{})){const e=d.entries[k];if(isD(k)&&e&&typeof e==='object')out.entries[k]={status:['P','A','H','PH','PP','PL'].includes(e.status)?e.status:'',ot:num(e.ot,24)};}
  for(const k in (d.advList||{})){
   if(/^\d{4}-\d{2}$/.test(k)&&Array.isArray(d.advList[k]))out.advList[k]=d.advList[k].slice(0,500).map(x=>({d:isD(x&&x.d)?x.d:'',a:num(x&&x.a,1e9)})).filter(x=>x.a>0);
  }
@@ -302,7 +340,9 @@ function migrate(d){
   dayRate:num(st.dayRate??D.dayRate,1e7),otRate:num(st.otRate??D.otRate,1e7),
   halfRate:(st.halfRate===null||st.halfRate===undefined||st.halfRate==='')?null:num(st.halfRate,1e7),
   name:st.name===undefined?D.name:String(st.name).slice(0,20),
-  cycleStart:ci(st.cycleStart,D.cycleStart),cycleEnd:ci(st.cycleEnd,D.cycleEnd)
+  cycleStart:ci(st.cycleStart,D.cycleStart),cycleEnd:ci(st.cycleEnd,D.cycleEnd),
+  payType:st.payType==='monthly'?'monthly':'daily',monthlySalary:num(st.monthlySalary,1e8),setupDone:st.setupDone===true,
+  weeklyOff:Number.isInteger(st.weeklyOff)&&st.weeklyOff>=0&&st.weeklyOff<=6?st.weeklyOff:-1
  };
  out.updatedAt=Number(d.updatedAt)||0;
  return out;
@@ -320,7 +360,7 @@ function getHalfRate(){
 }
 function pad(n){ return n < 10 ? '0'+n : ''+n; }
 function dateKey(y,m,d){ return `${y}-${pad(m+1)}-${pad(d)}`; }
-function money(value){ return '₹' + Number(value || 0).toLocaleString('en-IN',{maximumFractionDigits:2}); }
+function money(value){ const v=Number(value||0);return (v<0?'-':'')+'₹'+Math.abs(v).toLocaleString('en-IN',{maximumFractionDigits:2}); }
 function clampDay(y,m,d){return Math.min(d,new Date(y,m+1,0).getDate());}
 function endDay(y,m,E){return E>=30?new Date(y,m+1,0).getDate():clampDay(y,m,E);}
 function getCycleBounds(offset){
@@ -335,7 +375,7 @@ function getCycleBounds(offset){
  return {start,end};
 }
 function cycleKeyFor(start){ return `${start.getFullYear()}-${pad(start.getMonth()+1)}`; }
-function monthName(m){ return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m]; }
+function monthName(m){ return (LANG==='hi'?['जन॰','फ़र॰','मार्च','अप्रैल','मई','जून','जुल॰','अग॰','सित॰','अक्तू॰','नव॰','दिस॰']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])[m]; }
 function changeCycle(delta){ cycleOffset += delta; render(); }
 function toggleStatus(key,status){
  const e=data.entries[key] || {status:'',ot:0};
@@ -360,7 +400,7 @@ function saveAdv(){
 }
 function delAdv(i){
  const ck=cycleKeyFor(getCycleBounds(cycleOffset).start);
- if(!confirm('Delete this advance entry?'))return;
+ if(!confirm(tr('Delete this advance entry?')))return;
  (data.advList[ck]||[]).splice(i,1);save();render();
 }
 function animateTo(el,to){
@@ -372,14 +412,14 @@ function animateTo(el,to){
 function initTheme(){document.documentElement.dataset.theme=lsGet('salaryTheme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
 function toggleTheme(){const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;lsSet('salaryTheme',t);}
 function applyName(){
- const n=(data.settings.name||'').trim(),t=n?`${n}'s Salary Tracker`:'My Salary Tracker';
+ const n=(data.settings.name||'').trim(),t=LANG==='hi'?(n?`${n} का सैलरी ट्रैकर`:'मेरा सैलरी ट्रैकर'):(n?`${n}'s Salary Tracker`:'My Salary Tracker');
  document.getElementById('brandName').textContent=t;document.getElementById('drawerName').textContent=t;document.title=t;
 }
 function setGreet(){
- const n=new Date(),h=n.getHours(),w=h>=5&&h<12?'Morning':h>=12&&h<17?'Afternoon':h>=17&&h<21?'Evening':'Night',nm=(data.settings.name||'').trim();
+ const n=new Date(),h=n.getHours(),k=h>=5&&h<12?0:h>=12&&h<17?1:h>=17&&h<21?2:3,w=['Morning','Afternoon','Evening','Night'][k],nm=(data.settings.name||'').trim();
  const g=document.getElementById('greet'),b=document.createElement('b');
- b.textContent=`Good ${w}${nm?', '+nm:''}`;g.textContent='';
- g.append(b,n.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'}));
+ b.textContent=(LANG==='hi'?['सुप्रभात','शुभ दोपहर','शुभ संध्या','शुभ रात्रि'][k]:'Good '+w)+(nm?', '+nm:'');g.textContent='';
+ g.append(b,n.toLocaleDateString(LANG==='hi'?'hi-IN':'en-IN',{weekday:'long',day:'numeric',month:'long'}));
 }
 setInterval(()=>setGreet(),60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){setGreet();render();}});
@@ -393,8 +433,8 @@ function checkBackup(){
 }
 function snoozeBackup(){lsSet('salarySnooze',Date.now()+864e5);checkBackup();}
 function cycleTotal(off){
- const {start,end}=getCycleBounds(off);let t=0,c=new Date(start);
- while(c<=end){t+=dayPay(data.entries[dateKey(c.getFullYear(),c.getMonth(),c.getDate())]);c.setDate(c.getDate()+1);}
+ const {start,end}=getCycleBounds(off);const nd=Math.round((end-start)/864e5)+1;let t=isMonthly()?(Number(data.settings.monthlySalary)||0):0,c=new Date(start);
+ while(c<=end){t+=dayPay(data.entries[dateKey(c.getFullYear(),c.getMonth(),c.getDate())],nd,c);c.setDate(c.getDate()+1);}
  return {start,t};
 }
 function openChart(){
@@ -402,7 +442,7 @@ function openChart(){
  const mx=Math.max(...arr.map(x=>x.t),1),avg=arr.reduce((s,x)=>s+x.t,0)/arr.length;
  const sh=v=>v>=1000?(v/1000).toFixed(1).replace('.0','')+'k':Math.round(v);
  document.getElementById('chartBox').innerHTML=arr.map((x,i)=>`<div class="bar-col${i===5?' cur':''}"><span class="bar-val">${sh(x.t)}</span><div class="bar-wrap"><div class="bar" style="height:${Math.max(3,x.t/mx*100)}%"></div></div><span class="bar-lbl">${monthName(x.start.getMonth())}</span></div>`).join('');
- document.getElementById('chartSub').textContent=`6-cycle average: ${money(avg)}`;
+ document.getElementById('chartSub').textContent=(LANG==='hi'?'6 चक्र का औसत: ':'6-cycle average: ')+money(avg);
  document.getElementById('chartOverlay').classList.add('show');
 }
 function shareSummary(){
@@ -424,6 +464,102 @@ function removePin(){try{localStorage.removeItem('salaryPin');}catch(e){}closeOv
 let hiddenAt=0;
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(lsGet('salaryPin')&&Date.now()-hiddenAt>60000)lockNow();});
 let snap={};
+const $=id=>document.getElementById(id);
+const HI={
+'PAY • ATTENDANCE • OVERTIME':'वेतन • हाज़िरी • ओवरटाइम','View':'देखें','Earnings chart':'कमाई का चार्ट','Last 6 salary cycles':'पिछले 6 वेतन चक्र','Dark mode':'डार्क मोड','Easy on the eyes at night':'रात में आँखों के लिए आरामदायक','Install app':'ऐप इंस्टॉल करें','Add to your home screen':'होम स्क्रीन पर जोड़ें','Manage':'प्रबंधन','Settings':'सेटिंग्स','Day rate, OT rate & half-day pay':'दिन का रेट, OT रेट और आधे दिन का वेतन','PIN lock':'पिन लॉक','Protect with a 4-digit PIN':'4 अंकों के पिन से सुरक्षित करें','PIN is on':'पिन चालू है','Data':'डेटा','Google Drive backup':'गूगल ड्राइव बैकअप','Auto-backup to your Google Drive':'अपने गूगल ड्राइव में ऑटो-बैकअप','Share summary':'सारांश शेयर करें','Send this cycle via WhatsApp etc.':'इस चक्र का सारांश WhatsApp आदि से भेजें','Backup':'बैकअप','Download your data as a file':'अपना डेटा फ़ाइल में डाउनलोड करें','Restore':'रिस्टोर','Load data from a backup file':'बैकअप फ़ाइल से डेटा लाएँ','Works offline · saved on this device':'ऑफ़लाइन चलता है · इसी फ़ोन में सेव',
+'Estimated earnings this cycle':'इस चक्र की अनुमानित कमाई','Present':'उपस्थित','Absent':'अनुपस्थित','Half Day':'आधा दिन','OT Hours':'OT घंटे','OT Pay':'OT वेतन','Advance taken':'लिया गया एडवांस','+ Add':'+ जोड़ें','Estimated remaining balance':'अनुमानित बचा हुआ बैलेंस','Daily Attendance':'रोज़ की हाज़िरी','Tap a status to mark your day. Add overtime hours if applicable.':'दिन चिह्नित करने के लिए स्थिति दबाएँ। ओवरटाइम हो तो घंटे जोड़ें।','Daily total':'दिन का कुल','Day impact':'दिन का असर','Paid weekly off':'वेतन सहित साप्ताहिक छुट्टी','Today':'आज','Earlier':'पहले का','Sun':'रवि','Mon':'सोम','Tue':'मंगल','Wed':'बुध','Thu':'गुरु','Fri':'शुक्र','Sat':'शनि',
+'Time for a backup':'बैकअप लेने का समय','Later':'बाद में','No backup taken yet':'अभी तक बैकअप नहीं लिया','Install this app':'यह ऐप इंस्टॉल करें','Add it to your home screen. Works offline too.':'इसे होम स्क्रीन पर जोड़ें। ऑफ़लाइन भी चलता है।','Install':'इंस्टॉल',
+'Salary Settings':'सैलरी सेटिंग्स','Set your payment rates. Changes apply to the selected and other cycles using these settings.':'अपने वेतन के रेट तय करें। बदलाव सभी चक्रों पर लागू होंगे।','Your name':'आपका नाम','Language':'भाषा','Salary type':'वेतन का प्रकार','Per day':'प्रति दिन','Fixed monthly':'तय मासिक','Monthly salary (₹)':'मासिक वेतन (₹)','Full-day salary (₹)':'पूरे दिन का वेतन (₹)','Overtime rate per hour (₹)':'ओवरटाइम रेट प्रति घंटा (₹)','Half-day salary (₹) — leave blank for automatic half':'आधे दिन का वेतन (₹) — खाली छोड़ें तो अपने आप आधा','No paid off (I get paid only for days I work)':'कोई वेतन सहित छुट्टी नहीं (सिर्फ़ काम के दिन का वेतन)','Sunday':'रविवार','Monday':'सोमवार','Tuesday':'मंगलवार','Wednesday':'बुधवार','Thursday':'गुरुवार','Friday':'शुक्रवार','Saturday':'शनिवार','If your company pays for this day even when you do not work, pick the day. Mark A on a day to cancel its pay.':'अगर कंपनी काम न करने पर भी इस दिन का वेतन देती है तो दिन चुनें। उस दिन का वेतन रोकने के लिए A लगाएँ।','Salary cycle (day of month)':'वेतन चक्र (महीने की तारीख़)','to':'तक','Example: 26 to 25. End day 30 or 31 means end of month: 28, 29, 30 or 31 automatically, so no day is ever missed.':'उदाहरण: 26 से 25। अंतिम दिन 30 या 31 लिखने पर महीने का आख़िरी दिन माना जाता है, इसलिए कोई दिन नहीं छूटता।','Cancel':'रद्द करें','Save Settings':'सेटिंग्स सेव करें','Save':'सेव करें','Add Advance':'एडवांस जोड़ें','Saved in the salary cycle you are viewing.':'जो वेतन चक्र आप देख रहे हैं उसी में सेव होगा।','Amount (₹)':'रकम (₹)','Date':'तारीख़','Add':'जोड़ें','Earnings':'कमाई','Close':'बंद करें','PIN Lock':'पिन लॉक','Asks for a 4-digit PIN when the tracker opens. Keep a Backup: if you forget the PIN, the only way in is clearing browser data.':'ट्रैकर खुलने पर 4 अंकों का पिन माँगता है। बैकअप रखें: पिन भूलने पर ब्राउज़र डेटा साफ़ करना ही रास्ता है।','New 4-digit PIN':'नया 4 अंकों का पिन','Remove':'हटाएँ','Enter PIN':'पिन डालें',
+'Mark Attendance':'हाज़िरी लगाएँ','Clear':'साफ़ करें','OK':'ठीक है','Half day':'आधा दिन','1.5 days':'1.5 दिन','Double':'दोगुना','Paid leave':'वेतन सहित छुट्टी',
+'Welcome 👋':'स्वागत है 👋',"Let's set up your tracker in a minute. What should we call you?":'एक मिनट में अपना ट्रैकर सेट करें। हम आपको क्या कहकर बुलाएँ?','Continue':'आगे बढ़ें','Already used this app? Restore from Google Drive':'पहले से ऐप इस्तेमाल किया है? गूगल ड्राइव से रिस्टोर करें','← Back':'← पीछे','How are you paid?':'आपको वेतन कैसे मिलता है?','This sets how your salary is calculated.':'इसी से आपकी सैलरी का हिसाब तय होगा।','Salary per day (₹)':'प्रति दिन वेतन (₹)','Do you get overtime (OT)?':'क्या आपको ओवरटाइम (OT) मिलता है?','Yes':'हाँ','No':'नहीं','Overtime pay per hour (₹)':'ओवरटाइम वेतन प्रति घंटा (₹)','Does your company pay for a weekly off?':'क्या कंपनी साप्ताहिक छुट्टी का वेतन देती है?','No, only days I work':'नहीं, सिर्फ़ काम के दिन','Yes, Sunday':'हाँ, रविवार','Yes, Monday':'हाँ, सोमवार','Yes, Tuesday':'हाँ, मंगलवार','Yes, Wednesday':'हाँ, बुधवार','Yes, Thursday':'हाँ, गुरुवार','Yes, Friday':'हाँ, शुक्रवार','Yes, Saturday':'हाँ, शनिवार','Your salary cycle':'आपका वेतन चक्र','From which day to which day of the month is your salary counted? 1 to 31 means the full calendar month. Day 30 or 31 as the end means the last day of every month.':'महीने की किस तारीख़ से किस तारीख़ तक आपका वेतन गिना जाता है? 1 से 31 का मतलब पूरा महीना। अंत में 30 या 31 लिखने पर हर महीने का आख़िरी दिन माना जाता है।','From day':'किस दिन से','To day':'किस दिन तक','Back up to Google Drive?':'गूगल ड्राइव में बैकअप लें?','Keeps your data safe if you change or lose your phone. It uses a private app folder in your own Drive. You can also do this later from the menu.':'फ़ोन बदलने या खोने पर भी डेटा सुरक्षित रहता है। यह आपके ड्राइव के निजी ऐप-फ़ोल्डर का इस्तेमाल करता है। बाद में मेनू से भी कर सकते हैं।','Connect Google Drive':'गूगल ड्राइव जोड़ें','Skip for now':'अभी छोड़ें',
+'Please enter your name.':'कृपया अपना नाम लिखें।','Enter your salary amount.':'अपनी सैलरी की रकम लिखें।','Enter a valid overtime rate.':'सही ओवरटाइम रेट लिखें।','Days must be between 1 and 31.':'तारीख़ 1 से 31 के बीच होनी चाहिए।','Settings updated.':'सेटिंग्स अपडेट हो गईं।','Advance added.':'एडवांस जुड़ गया।','Enter a valid amount.':'सही रकम लिखें।','Google Drive connected.':'गूगल ड्राइव जुड़ गया।','Could not connect. Check internet and try again.':'जुड़ नहीं सका। इंटरनेट जाँचकर फिर कोशिश करें।','Backup downloaded. Keep it safe.':'बैकअप डाउनलोड हुआ। इसे सुरक्षित रखें।','Backup restored successfully.':'बैकअप सफलतापूर्वक रिस्टोर हुआ।','Invalid backup file. Your current data is unchanged.':'बैकअप फ़ाइल सही नहीं है। आपका मौजूदा डेटा नहीं बदला।','PIN must be exactly 4 digits.':'पिन ठीक 4 अंकों का होना चाहिए।','PIN lock is on.':'पिन लॉक चालू हो गया।','PIN lock removed.':'पिन लॉक हटा दिया गया।','Wrong PIN, try again':'गलत पिन, फिर कोशिश करें','Summary copied.':'सारांश कॉपी हुआ।',
+'Restore this backup? Current tracker data will be replaced.':'यह बैकअप रिस्टोर करें? मौजूदा डेटा बदल जाएगा।','Delete this advance entry?':'यह एडवांस एंट्री हटाएँ?','Disconnect Google Drive backup? Your backup file stays in your Drive.':'गूगल ड्राइव बैकअप बंद करें? आपकी बैकअप फ़ाइल ड्राइव में रहेगी।'};
+
+function tr(x){return LANG==='hi'&&HI[x]||x;}
+function setLang(l){lsSet('salaryLang',l==='hi'?'hi':'en');location.reload();}
+function trNode(n){
+ if(n.nodeType===3){const t=n.nodeValue.trim();if(t&&HI[t])n.nodeValue=n.nodeValue.replace(t,HI[t]);}
+ else if(n.nodeType===1){['placeholder','aria-label'].forEach(a=>{const v=n.getAttribute(a);if(v&&HI[v])n.setAttribute(a,HI[v]);});n.childNodes.forEach(trNode);}
+}
+if(LANG==='hi'){
+ document.documentElement.lang='hi';trNode(document.body);
+ new MutationObserver(ms=>ms.forEach(m=>{m.addedNodes.forEach(trNode);if(m.type==='characterData')trNode(m.target);})).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+let wz={s:1,name:'',type:'daily',amt:'',ot:'',otOn:true,cs:1,ce:31,off:'-1'};
+function hasData(){return Object.values(data.entries).some(e=>e&&(e.status||e.ot))||Object.values(data.advList).some(a=>a.length);}
+function maybeSetup(){if(data.settings.setupDone)return;if(hasData()){data.settings.setupDone=true;save();return;}wizShow();}
+function wizShow(){$('wiz').classList.add('show');wizRender();}
+function wizRender(){
+ const s=wz.s,b=$('wizBody');
+ $('wizDots').innerHTML=[1,2,3,4].map(i=>`<i class="${i<=s?'on':''}"></i>`).join('');
+ const nav=(f,l)=>`<button class="wbtn" onclick="${f}">${l}</button>`+(s>1?'<button class="wlink" onclick="wizBack()">← Back</button>':'');
+ if(s===1){
+  b.innerHTML=`<div class="wopt" style="margin:0 0 20px"><button id="lEn" onclick="setLang('en')">English</button><button id="lHi" onclick="setLang('hi')">हिन्दी</button></div><h2>Welcome 👋</h2><p>Let's set up your tracker in a minute. What should we call you?</p><input id="wName" maxlength="20" placeholder="Your name" autocomplete="off">`+nav('wizNext()','Continue')+`<button class="wlink" onclick="wizRestore()">Already used this app? Restore from Google Drive</button>`;
+  $('wName').value=wz.name;$('lEn').classList.toggle('on',LANG==='en');$('lHi').classList.toggle('on',LANG==='hi');
+ }else if(s===2){
+  b.innerHTML=`<h2>How are you paid?</h2><p>This sets how your salary is calculated.</p><div class="wopt"><button id="tDaily" onclick="wizType('daily')">Per day</button><button id="tMonthly" onclick="wizType('monthly')">Fixed monthly</button></div><label id="wAmtL"></label><input id="wAmt" type="number" inputmode="decimal" min="0"><label>Do you get overtime (OT)?</label><div class="wopt"><button id="oYes" onclick="wizOt(1)">Yes</button><button id="oNo" onclick="wizOt(0)">No</button></div><div id="wOtBox"><label>Overtime pay per hour (₹)</label><input id="wOt" type="number" inputmode="decimal" min="0"></div><div id="wOffBox"><label>Does your company pay for a weekly off?</label><select id="wOff"><option value="-1">No, only days I work</option><option value="0">Yes, Sunday</option><option value="1">Yes, Monday</option><option value="2">Yes, Tuesday</option><option value="3">Yes, Wednesday</option><option value="4">Yes, Thursday</option><option value="5">Yes, Friday</option><option value="6">Yes, Saturday</option></select></div>`+nav('wizNext()','Continue');
+  $('wAmt').value=wz.amt;$('wOt').value=wz.ot;$('wOff').value=wz.off;wizSync();
+ }else if(s===3){
+  b.innerHTML=`<h2>Your salary cycle</h2><p>From which day to which day of the month is your salary counted? 1 to 31 means the full calendar month. Day 30 or 31 as the end means the last day of every month.</p><div class="wrow"><div><label>From day</label><input id="wCs" type="number" inputmode="numeric" min="1" max="31"></div><div><label>To day</label><input id="wCe" type="number" inputmode="numeric" min="1" max="31"></div></div>`+nav('wizNext()','Continue');
+  $('wCs').value=wz.cs;$('wCe').value=wz.ce;
+ }else{
+  b.innerHTML=`<h2>Back up to Google Drive?</h2><p>Keeps your data safe if you change or lose your phone. It uses a private app folder in your own Drive. You can also do this later from the menu.</p><button class="wbtn" onclick="wizFinish(true)">Connect Google Drive</button><button class="wbtn ghost" onclick="wizFinish(false)">Skip for now</button><button class="wlink" onclick="wizBack()">← Back</button>`;
+ }
+}
+function wizTake(){
+ if(wz.s===1)wz.name=$('wName').value.trim().slice(0,20);
+ if(wz.s===2){wz.amt=$('wAmt').value;wz.ot=$('wOt').value;wz.off=$('wOff').value;}
+ if(wz.s===3){wz.cs=$('wCs').value;wz.ce=$('wCe').value;}
+}
+function wizSync(){
+ $('tDaily').classList.toggle('on',wz.type==='daily');$('tMonthly').classList.toggle('on',wz.type==='monthly');
+ $('wAmtL').textContent=wz.type==='daily'?'Salary per day (₹)':'Monthly salary (₹)';
+ $('oYes').classList.toggle('on',wz.otOn);$('oNo').classList.toggle('on',!wz.otOn);
+ $('wOtBox').style.display=wz.otOn?'':'none';$('wOffBox').style.display=wz.type==='daily'?'':'none';
+}
+function wizType(t){wizTake();wz.type=t;wizSync();}
+function wizOt(v){wizTake();wz.otOn=!!v;wizSync();}
+function wizBack(){wizTake();wz.s--;wizRender();}
+function wizNext(){
+ wizTake();
+ if(wz.s===1&&!wz.name){showToast('Please enter your name.');return;}
+ if(wz.s===2){
+  if(!(Number(wz.amt)>0)){showToast('Enter your salary amount.');return;}
+  if(wz.otOn&&wz.ot!==''&&!(Number(wz.ot)>=0)){showToast('Enter a valid overtime rate.');return;}
+ }
+ if(wz.s===3){const a=Number(wz.cs),c=Number(wz.ce);if(!Number.isInteger(a)||!Number.isInteger(c)||a<1||a>31||c<1||c>31){showToast('Days must be between 1 and 31.');return;}}
+ wz.s++;wizRender();
+}
+function wizFinish(connect){
+ const st=data.settings;
+ st.name=wz.name;st.payType=wz.type;
+ if(wz.type==='daily')st.dayRate=Number(wz.amt);else st.monthlySalary=Number(wz.amt);
+ st.otRate=wz.otOn?(Number(wz.ot)||0):0;st.halfRate=null;st.weeklyOff=wz.type==='daily'?Math.min(6,Math.max(-1,Math.round(Number(wz.off)))):-1;
+ st.cycleStart=Number(wz.cs);st.cycleEnd=Number(wz.ce);st.setupDone=true;
+ cycleOffset=0;save();$('wiz').classList.remove('show');
+ applyName();setGreet();render();checkBackup();showToast('All set, '+st.name+'!');
+ if(connect)connectDrive();
+}
+async function wizRestore(){
+ $('wiz').classList.remove('show');
+ await connectDrive();
+ if(hasData()){data.settings.setupDone=true;save();applyName();setGreet();render();}else wizShow();
+}
+const EXTRA={H:'½',PH:'P+½',PP:'P+P',PL:'PA'};
+let shKey='',shSel='';
+function setStatus(key,st){const e=data.entries[key]||{status:'',ot:0};e.status=st;data.entries[key]=e;if(navigator.vibrate)navigator.vibrate(12);save();render();}
+function buildChips(){
+ $('sheetChips').innerHTML=[['A','A'],['H','½'],['P','P'],['PH','P+½'],['PP','P+P'],['PL','PA']].map(x=>`<button class="chip${shSel===x[0]?' on':''}" onclick="shPick('${x[0]}')">${x[1]}</button>`).join('');
+}
+function openSheet(key){
+ shKey=key;shSel=(data.entries[key]||{}).status||'';
+ const [y,m,d]=key.split('-');$('sheetDate').textContent=`${+d} ${monthName(m-1)} ${y}`;
+ buildChips();$('sheetOv').classList.add('show');$('sheet').classList.add('show');
+}
+function shPick(v){shSel=shSel===v?'':v;buildChips();}
+function closeSheet(){$('sheetOv').classList.remove('show');$('sheet').classList.remove('show');}
+function sheetOk(){setStatus(shKey,shSel);closeSheet();}
+function sheetClear(){setStatus(shKey,'');closeSheet();}
 let deferredPrompt=null;
 const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -507,7 +643,7 @@ function setDriveStatus(){
 }
 async function connectDrive(){
  if(lsGet('salaryDriveOn')==='1'){
-  if(confirm('Disconnect Google Drive backup? Your backup file stays in your Drive.')){lsSet('salaryDriveOn','0');setDriveStatus();checkBackup();}
+  if(confirm(tr('Disconnect Google Drive backup? Your backup file stays in your Drive.'))){lsSet('salaryDriveOn','0');setDriveStatus();checkBackup();}
   return;
  }
  try{
@@ -527,11 +663,20 @@ window.addEventListener('online',trySync);
 document.addEventListener('click',()=>{if(lsGet('salaryDriveOn')==='1'&&lsGet('salaryDirty')==='1'&&!(accessToken&&Date.now()<tokExp))trySync();},true);
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
-function dayPay(e){
- if(!e)return 0;
+function isPaidOff(d){const t=new Date();t.setHours(23,59,59,999);return !isMonthly()&&data.settings.weeklyOff>=0&&d.getDay()===data.settings.weeklyOff&&d<=t;}
+function isMonthly(){return data.settings.payType==='monthly';}
+function dayPay(e,n,d){
+ if(!e)e={status:'',ot:0};
  let pay=0;
- if(e.status==='P')pay+=getDayRate();
- else if(e.status==='H')pay+=getHalfRate();
+ if(isMonthly()){
+  const pd=(Number(data.settings.monthlySalary)||0)/(n||30);
+  if(e.status==='A')pay-=pd;else if(e.status==='H')pay-=pd/2;else if(e.status==='PH')pay+=pd/2;else if(e.status==='PP')pay+=pd;
+ }else{
+  const MU={P:1,PH:1.5,PP:2,PL:1};
+  if(MU[e.status])pay+=getDayRate()*MU[e.status];
+  else if(e.status==='H')pay+=getHalfRate();
+  else if(!e.status&&d&&isPaidOff(d))pay+=getDayRate();
+ }
  pay+=(Number(e.ot)||0)*getOtRate();
  return pay;
 }
@@ -549,11 +694,13 @@ function closeMenu(){
  document.getElementById('menuOverlay').classList.remove('show');
  const d=document.getElementById('menuDrawer');d.classList.remove('show');d.setAttribute('aria-hidden','true');
 }
+function syncPayFields(){const m=document.getElementById('setPayType').value==='monthly';document.getElementById('fMonthly').style.display=m?'':'none';document.getElementById('fDay').style.display=m?'none':'';document.getElementById('fHalf').style.display=m?'none':'';document.getElementById('fOff').style.display=m?'none':'';}
 function openSettings(){
  document.getElementById('setDayRate').value=getDayRate();
  document.getElementById('setOtRate').value=getOtRate();
  document.getElementById('setHalfRate').value=data.settings.halfRate ?? '';
- document.getElementById('setName').value=data.settings.name||'';
+ document.getElementById('setName').value=data.settings.name||'';document.getElementById('setLang').value=LANG;
+ document.getElementById('setPayType').value=data.settings.payType;document.getElementById('setMonthly').value=data.settings.monthlySalary||'';document.getElementById('setOff').value=String(data.settings.weeklyOff);syncPayFields();
  document.getElementById('setCycStart').value=data.settings.cycleStart;
  document.getElementById('setCycEnd').value=data.settings.cycleEnd;
  document.getElementById('settingsOverlay').classList.add('show');
@@ -568,16 +715,19 @@ function saveSettings(){
  }
  const cs=Number(document.getElementById('setCycStart').value),ce=Number(document.getElementById('setCycEnd').value);
  if(!Number.isInteger(cs)||!Number.isInteger(ce)||cs<1||cs>31||ce<1||ce>31){showToast('Cycle days must be between 1 and 31.');return;}
+ const mo=Number(document.getElementById('setMonthly').value||0);
+ if(!Number.isFinite(mo)||mo<0){showToast('Enter a valid monthly salary.');return;}
+ data.settings.payType=document.getElementById('setPayType').value==='monthly'?'monthly':'daily';data.settings.monthlySalary=mo;data.settings.weeklyOff=Math.min(6,Math.max(-1,Math.round(Number(document.getElementById('setOff').value))));
  data.settings.name=document.getElementById('setName').value.trim().slice(0,20);
  data.settings.cycleStart=cs;data.settings.cycleEnd=ce;
  data.settings.dayRate=dr;data.settings.otRate=ot;
  data.settings.halfRate=halfRaw===''?null:Number(halfRaw);
- save();closeSettings();cycleOffset=0;applyName();setGreet();render();showToast('Settings updated.');
+ save();{const nl=document.getElementById('setLang').value==='hi'?'hi':'en';if(nl!==LANG){lsSet('salaryLang',nl);location.reload();return;}}closeSettings();cycleOffset=0;applyName();setGreet();render();showToast('Settings updated.');
 }
 function exportData(){
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),a=document.createElement('a'),now=new Date();
- a.href=url;a.download=`anup-salary-backup-${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}.json`;
+ a.href=url;a.download=`${((data.settings.name||'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-+|-+$/g,''))||'my'}-salary-backup-${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}.json`;
  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
  lsSet('salaryLastBackup',Date.now());checkBackup();showToast('Backup downloaded. Keep it safe.');
 }
@@ -588,7 +738,7 @@ function importData(event){
   try{
    const loaded=JSON.parse(e.target.result);
    if(!loaded || !loaded.entries || typeof loaded.entries!=='object')throw new Error('Invalid backup');
-   if(!confirm('Restore this backup? Current tracker data will be replaced.'))return;
+   if(!confirm(tr('Restore this backup? Current tracker data will be replaced.')))return;
    data=migrate({...loaded,advances:loaded.advances||{},settings:{...DEFAULT_SETTINGS,...(loaded.settings||{})}});
    save();render();showToast('Backup restored successfully.');
   }catch(error){showToast('Invalid backup file. Your current data is unchanged.');}
@@ -602,27 +752,28 @@ function render(){
  document.getElementById('cycleLabel').innerHTML=
   `${start.getDate()} ${monthName(start.getMonth())} – ${end.getDate()} ${monthName(end.getMonth())} ${end.getFullYear()}`;
  const list=document.getElementById('daysList');list.innerHTML='';
- let cntP=0,cntA=0,cntH=0,otHrs=0,otAmt=0,total=0,cur=new Date(start);
+ const nd=Math.round((end-start)/864e5)+1;
+ let cntP=0,cntA=0,cntH=0,otHrs=0,otAmt=0,total=isMonthly()?(Number(data.settings.monthlySalary)||0):0,cur=new Date(start);
  const tk=todayKey(),weekdays=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
  while(cur<=end){
   const key=dateKey(cur.getFullYear(),cur.getMonth(),cur.getDate());
   const e=data.entries[key]||{status:'',ot:0};
-  const pay=dayPay(e);total+=pay;
-  if(e.status==='P')cntP++;else if(e.status==='A')cntA++;else if(e.status==='H')cntH++;
+  const pay=dayPay(e,nd,cur);total+=pay;const isOff=!isMonthly()&&data.settings.weeklyOff===cur.getDay();
+  if(e.status==='A')cntA++;else if(e.status==='H')cntH++;else cntP+=({P:1,PH:1.5,PP:2,PL:1})[e.status]||0;
   otHrs+=Number(e.ot)||0;otAmt+=(Number(e.ot)||0)*getOtRate();
-  const row=document.createElement('div');row.className='day'+(key===tk?' today':'');
+  const row=document.createElement('div');row.className='day'+(key===tk?' today':'')+(isOff?' off':'');
   row.innerHTML=`
    <div class="date${cur.getDay()===0?' sun':''}"><b>${cur.getDate()}</b><span>${key===tk?'Today':weekdays[cur.getDay()]}</span></div>
    <div class="status-area">
     <button class="sbtn P ${e.status==='P'?'active':''}" aria-label="Mark ${key} present" aria-pressed="${e.status==='P'}" onclick="toggleStatus('${key}','P')">P</button>
     <button class="sbtn A ${e.status==='A'?'active':''}" aria-label="Mark ${key} absent" aria-pressed="${e.status==='A'}" onclick="toggleStatus('${key}','A')">A</button>
     <input class="ot-input" aria-label="Overtime hours for ${key}" type="number" min="0" step="0.5" placeholder="OT" value="${e.ot||''}" onchange="updateOT('${key}',this.value)">
-    <button class="sbtn H ${e.status==='H'?'active':''}" aria-label="Mark ${key} half day" aria-pressed="${e.status==='H'}" onclick="toggleStatus('${key}','H')">½</button>
+    <button class="sbtn H ${EXTRA[e.status]?'active':''}" aria-label="More options for ${key}" onclick="openSheet('${key}')">${EXTRA[e.status]||'⋮'}</button>
    </div>
-   <div class="pay">${money(pay)}<small>Daily total</small></div>`;
+   <div class="pay">${money(pay)}<small>${isMonthly()?'Day impact':(isOff&&!e.status?'Paid weekly off':'Daily total')}</small></div>`;
   list.appendChild(row);cur.setDate(cur.getDate()+1);
  }
- document.getElementById('cntP').textContent=cntP;
+ document.getElementById('cntP').textContent=Number.isInteger(cntP)?cntP:cntP.toFixed(1);
  document.getElementById('cntA').textContent=cntA;
  document.getElementById('cntH').textContent=cntH;
  document.getElementById('cntOT').textContent=Number.isInteger(otHrs)?otHrs:otHrs.toFixed(1);
@@ -636,7 +787,7 @@ function render(){
 }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSettings();closeMenu();document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show'));}});
-initTheme();applyName();setGreet();render();checkBackup();setDriveStatus();if(lsGet('salaryPin'))lockNow();setTimeout(trySync,2000);initAds();if(isIOS())showInstall();
+initTheme();applyName();setGreet();render();checkBackup();setDriveStatus();if(lsGet('salaryPin'))lockNow();setTimeout(trySync,2000);initAds();maybeSetup();setTimeout(()=>{if(!isStandalone())showInstall();},1500);
 </script>
 </body>
 </html>
