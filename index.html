@@ -137,6 +137,8 @@ button{cursor:pointer}
 .lock .lm{width:58px;height:58px;border-radius:18px;background:#ffffff1a;display:grid;place-items:center;font-size:26px;margin:auto}
 .lock input{width:180px;background:#ffffff14;border:1px solid #ffffff30;border-radius:16px;color:#fff;font-size:28px;letter-spacing:14px;text-align:center;padding:12px 0 12px 14px;outline:none}
 .lock p{height:16px;margin:12px 0 0;font-size:12px;color:#ff9aa0}
+.banner.info{background:var(--primary-soft);border-color:#cdd8ff;color:var(--primary)}
+.banner.info button{background:var(--primary)}.banner.info .ghost{background:transparent;color:var(--primary)}
 .ad-slot{display:none}
 .ad-slot.on{display:block;margin:20px 0 6px;min-height:60px;text-align:center;border-radius:14px;overflow:hidden}
 @media(max-width:600px){
@@ -168,6 +170,7 @@ button{cursor:pointer}
 </header>
 
 <main class="shell">
+ <div class="banner info" id="installBanner"><div><b>Install this app</b><span>Add it to your home screen. Works offline too.</span></div><button onclick="installApp()">Install</button><button class="ghost" onclick="dismissInstall()">Later</button></div>
  <div class="banner" id="bkBanner"><div><b>Time for a backup</b><span id="bkText"></span></div><button onclick="exportData()">Backup</button><button class="ghost" onclick="snoozeBackup()">Later</button></div>
  <div class="greet" id="greet"></div>
  <section class="hero">
@@ -214,6 +217,7 @@ button{cursor:pointer}
   <div class="menu-label">View</div>
   <button class="menu-item" onclick="closeMenu();openChart()"><span class="menu-icon mi-green" style="font-size:19px">📊</span><span class="menu-text"><b>Earnings chart</b><span>Last 6 salary cycles</span></span><span class="menu-chevron">›</span></button>
   <button class="menu-item" onclick="toggleTheme()"><span class="menu-icon mi-purple" style="font-size:19px">🌙</span><span class="menu-text"><b>Dark mode</b><span>Easy on the eyes at night</span></span><span class="sw"></span></button>
+  <button class="menu-item" id="installItem" style="display:none" onclick="closeMenu();installApp()"><span class="menu-icon mi-blue" style="font-size:19px">📲</span><span class="menu-text"><b>Install app</b><span>Add to your home screen</span></span><span class="menu-chevron">›</span></button>
   <div class="menu-label" style="margin-top:20px">Manage</div>
   <button class="menu-item" onclick="closeMenu();openSettings()">
    <span class="menu-icon mi-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span>
@@ -420,6 +424,28 @@ function removePin(){try{localStorage.removeItem('salaryPin');}catch(e){}closeOv
 let hiddenAt=0;
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hiddenAt=Date.now();else if(lsGet('salaryPin')&&Date.now()-hiddenAt>60000)lockNow();});
 let snap={};
+let deferredPrompt=null;
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+function showInstall(){
+ if(isStandalone())return;
+ document.getElementById('installItem').style.display='';
+ if(lsGet('salaryInstallNo')!=='1')document.getElementById('installBanner').classList.add('show');
+}
+function hideInstall(){
+ document.getElementById('installItem').style.display='none';
+ document.getElementById('installBanner').classList.remove('show');
+}
+function dismissInstall(){lsSet('salaryInstallNo','1');document.getElementById('installBanner').classList.remove('show');}
+async function installApp(){
+ if(deferredPrompt){
+  try{deferredPrompt.prompt();await deferredPrompt.userChoice;}catch(e){}
+  deferredPrompt=null;hideInstall();return;
+ }
+ showToast(isIOS()?'Tap the Share icon, then Add to Home Screen.':'Open the browser menu ⋮ and tap Install app or Add to Home screen.');
+}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;showInstall();});
+window.addEventListener('appinstalled',()=>{deferredPrompt=null;hideInstall();});
 /* ADS (off for now). To add ads later: set enabled:true and put the ad network code inside initAds().
    Keep ads inside #adSlot only. Never pass tracker or Google Drive data to any ad code. */
 const ADS={enabled:false};
@@ -610,7 +636,7 @@ function render(){
 }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSettings();closeMenu();document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show'));}});
-initTheme();applyName();setGreet();render();checkBackup();setDriveStatus();if(lsGet('salaryPin'))lockNow();setTimeout(trySync,2000);initAds();
+initTheme();applyName();setGreet();render();checkBackup();setDriveStatus();if(lsGet('salaryPin'))lockNow();setTimeout(trySync,2000);initAds();if(isIOS())showInstall();
 </script>
 </body>
 </html>
