@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com; connect-src 'self' https://www.googleapis.com https://accounts.google.com; frame-src 'self' https://accounts.google.com https://anup143k-ads.github.io; img-src 'self' data: blob:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://bauval.org; style-src 'self' 'unsafe-inline' https://accounts.google.com; connect-src 'self' https://www.googleapis.com https://accounts.google.com https://bauval.org; frame-src https:; img-src 'self' data: blob: https:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
+<script>try{window.NOADS=/[?&]noads=1/.test(location.search)||localStorage.getItem("salaryDriveOn")==="1";}catch(e){window.NOADS=false;}</script>
 <meta name="theme-color" content="#101827">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -173,6 +174,9 @@ button{cursor:pointer}
 .drawer-body .ad-slot.on{margin:14px 0 0}
 #adSlotTop.on{margin:4px 0 18px}
 #adSlotTop.on::before{content:'Advertisement';display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:6px}
+.ad-slot.direct{display:block;text-align:center;overflow:hidden;border-radius:14px;margin:4px 0 18px}
+.ad-slot.direct::before{content:'Advertisement';display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+body:has(.ad-slot.direct:empty) .ad-slot.direct:empty{display:none}
 .ad-slot.pre{display:block;height:0;min-height:0;margin:0;overflow:hidden}
 .ad-slot.on{display:block;margin:20px 0 6px;min-height:60px;text-align:center;border-radius:14px;overflow:hidden}
 @media(max-width:600px){
@@ -231,12 +235,12 @@ button{cursor:pointer}
  </section>
  <div class="adv-list" id="advList"></div>
 
- <div class="ad-slot" id="adSlotTop" aria-label="Advertisement"></div>
+ <div class="ad-slot direct" id="adSlotTop" aria-label="Advertisement"><script>if(!window.NOADS){document.write('<scr'+'ipt>atOptions={"key":"27d59d9565d6f880050ccbb5902dc51d","format":"iframe","height":250,"width":300,"params":{}};</scr'+'ipt><scr'+'ipt data-cfasync="false" src="https://bauval.org/22/27d59d9565d6f880050ccbb5902dc51d"></scr'+'ipt>');}</script></div>
  <div class="section-head">
   <div><h2>Daily Attendance</h2><p>Tap a status to mark your day. Add overtime hours if applicable.</p></div>
  </div>
  <div id="daysList" class="days"></div>
- <div class="ad-slot" id="adSlot" aria-label="Advertisement"></div>
+ <div class="ad-slot direct" id="adSlot" aria-label="Advertisement"><script>if(!window.NOADS){document.write('<scr'+'ipt>atOptions={"key":"fd7dfcd2288484a065095ab4516c6d06","format":"iframe","height":50,"width":320,"params":{}};</scr'+'ipt><scr'+'ipt data-cfasync="false" src="https://bauval.org/22/fd7dfcd2288484a065095ab4516c6d06"></scr'+'ipt>');}</script></div>
  <div id="emptyNote" class="empty-note">No attendance entries yet. Start by marking today's status.</div>
 
 </main>
@@ -271,6 +275,7 @@ button{cursor:pointer}
    <span class="menu-icon mi-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V9M7 13l5-5 5 5M5 4h14"/></svg></span>
    <span class="menu-text"><b>Restore</b><span>Load data from a backup file</span></span><span class="menu-chevron">›</span>
   </button>
+  <button class="menu-item" onclick="closeMenu();window.open(ADS.origin+'/support.html','_blank','noopener')"><span class="menu-icon mi-green" style="font-size:19px">💙</span><span class="menu-text"><b>Support the app</b><span>Optional page with ads. Keeps the app free.</span></span><span class="menu-chevron">›</span></button>
   <div class="ad-slot" id="adSlotMenu" aria-label="Advertisement"></div>
   <input type="file" id="importFile" accept=".json,application/json" hidden onchange="importData(event)">
  </div>
@@ -506,7 +511,10 @@ const HI={
 'Salary cycle starts on day':'सैलरी चक्र शुरू होने का दिन',
 'Example: 26 means the cycle runs from the 26th to the 25th. 1 means the full month. If a month is shorter, its last day is used.':'उदाहरण: 26 का मतलब है 26 तारीख से अगले महीने की 25 तारीख तक। 1 का मतलब है पूरा महीना। छोटे महीने में आख़िरी दिन लिया जाता है।',
 'On which day of the month does your salary cycle start? Day 1 means the full calendar month. Day 26 means the 26th to the 25th.':'आपका सैलरी चक्र महीने के किस दिन से शुरू होता है? 1 का मतलब पूरा महीना। 26 का मतलब 26 से 25 तारीख तक।',
-'☁ Not synced. Tap to sync.':'☁ सिंक बाकी है। सिंक करने के लिए टैप करें।'
+'☁ Not synced. Tap to sync.':'☁ सिंक बाकी है। सिंक करने के लिए टैप करें।',
+'Support the app':'ऐप को सपोर्ट करें',
+'Optional page with ads. Keeps the app free.':'विज्ञापन वाला वैकल्पिक पेज। ऐप को मुफ़्त रखने में मदद करता है।',
+'To keep your Google account safe, the app will reload without ads. Then tap Google Drive backup again. Continue?':'आपके Google खाते की सुरक्षा के लिए ऐप बिना विज्ञापन के दोबारा खुलेगा। फिर Google Drive backup को दोबारा दबाएँ। आगे बढ़ें?'
 };
 
 function tr(x){return LANG==='hi'&&HI[x]||x;}
@@ -618,7 +626,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPro
 window.addEventListener('appinstalled',()=>{deferredPrompt=null;hideInstall();});
 /* ADS (off for now). To add ads later: set enabled:true and put the ad network code inside initAds().
    Keep ads inside #adSlot only. Never pass tracker or Google Drive data to any ad code. */
-const ADS={enabled:true,src:'https://anup143k-ads.github.io/ads.html',origin:'https://anup143k-ads.github.io',height:60};
+const ADS={enabled:false,src:'https://anup143k-ads.github.io/ads.html',origin:'https://anup143k-ads.github.io',height:60};
 function mountAd(id,src,h){
  const el=document.getElementById(id);
  if(!ADS.enabled||!el||el.firstChild||!navigator.onLine)return;
@@ -699,6 +707,7 @@ async function connectDrive(){
   if(confirm(tr('Disconnect Google Drive backup? Your backup file stays in your Drive.'))){lsSet('salaryDriveOn','0');try{localStorage.removeItem('salaryDriveHint');}catch(e){}setDriveStatus();checkBackup();}
   return;
  }
+ if(!window.NOADS){if(confirm(tr('To keep your Google account safe, the app will reload without ads. Then tap Google Drive backup again. Continue?')))location.href=location.pathname+'?noads=1';return;}
  try{
   const f=await findFile(true);
   const has=Object.values(data.entries).some(e=>e&&(e.status||e.ot))||Object.values(data.advList).some(a=>a.length);
