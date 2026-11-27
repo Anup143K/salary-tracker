@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://bauval.org; style-src 'self' 'unsafe-inline' https://accounts.google.com; connect-src 'self' https://www.googleapis.com https://accounts.google.com https://bauval.org; frame-src https:; img-src 'self' data: blob: https:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; connect-src 'self' https:; frame-src https: about: data: blob:; img-src 'self' data: blob: https:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>try{window.NOADS=/[?&]noads=1/.test(location.search)||localStorage.getItem("salaryDriveOn")==="1";}catch(e){window.NOADS=false;}</script>
 <meta name="theme-color" content="#101827">
@@ -235,12 +235,12 @@ body:has(.ad-slot.direct:empty) .ad-slot.direct:empty{display:none}
  </section>
  <div class="adv-list" id="advList"></div>
 
- <div class="ad-slot direct" id="adSlotTop" aria-label="Advertisement"><script>if(!window.NOADS){document.write('<scr'+'ipt>atOptions={"key":"27d59d9565d6f880050ccbb5902dc51d","format":"iframe","height":250,"width":300,"params":{}};</scr'+'ipt><scr'+'ipt data-cfasync="false" src="https://bauval.org/22/27d59d9565d6f880050ccbb5902dc51d"></scr'+'ipt>');}</script></div>
+ <div class="ad-slot direct" id="adSlotTop" aria-label="Advertisement"><script>if(!window.NOADS){document.write('<scr'+'ipt>atOptions={"key":"9221f64a8308e081b40893354098403e","format":"iframe","height":50,"width":320,"params":{}};</scr'+'ipt><scr'+'ipt data-cfasync="false" src="https://bauval.org/22/9221f64a8308e081b40893354098403e"></scr'+'ipt>');}</script></div>
  <div class="section-head">
   <div><h2>Daily Attendance</h2><p>Tap a status to mark your day. Add overtime hours if applicable.</p></div>
  </div>
  <div id="daysList" class="days"></div>
- <div class="ad-slot direct" id="adSlot" aria-label="Advertisement"><script>if(!window.NOADS){document.write('<scr'+'ipt>atOptions={"key":"fd7dfcd2288484a065095ab4516c6d06","format":"iframe","height":50,"width":320,"params":{}};</scr'+'ipt><scr'+'ipt data-cfasync="false" src="https://bauval.org/22/fd7dfcd2288484a065095ab4516c6d06"></scr'+'ipt>');}</script></div>
+ <div class="ad-slot" id="adSlot" aria-label="Advertisement" style="display:none"></div>
  <div id="emptyNote" class="empty-note">No attendance entries yet. Start by marking today's status.</div>
 
 </main>
